@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Language\en-US\Test\TextFromEmbedResource.lang" />
+    <EmbeddedResource Include="Language\zh-CN\Test\TextFromEmbedResource.lang" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quick.Localize\Quick.Localize.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Language\en-US\Test\TextFromExternalFile.lang">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Language\zh-CN\Test+TextFromEmbedResource.lang">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Language\zh-CN\Test\TextFromExternalFile.lang">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
