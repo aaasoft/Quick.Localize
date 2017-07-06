@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Authors>scbeta</Authors>
+    <Company />
+    <Description>A simple libary for localize your program.</Description>
   </PropertyGroup>
 
 </Project>
