@@ -1,13 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.5</TargetFramework>
+    <TargetFrameworks>netstandard1.5;netstandard2.0;net45;</TargetFrameworks>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Authors>scbeta</Authors>
     <Company />
     <Description>A simple libary for localize your program.</Description>
     <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/aaasoft/Quick.Localize/master/LICENSE</PackageLicenseUrl>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>1.0.2
+  * Add netstandard2.0 support.
+
+1.0.1
+  * Add net45 support.
+
+1.0
+  * First public,include netstandard 1.5</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

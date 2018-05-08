@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build(debug)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Quick.Localize.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build(release)",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "-c",
+                "Release",
+                "${workspaceFolder}/Quick.Localize.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
