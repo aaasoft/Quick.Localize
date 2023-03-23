@@ -19,6 +19,7 @@
 
 1.0
   * First public,include netstandard 1.5</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
