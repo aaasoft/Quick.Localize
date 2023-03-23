@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Authors>scbeta</Authors>
     <Company />
     <Description>A simple libary for localize your program.</Description>
-    <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/aaasoft/Quick.Localize/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.3</Version>
-    <PackageReleaseNotes>1.0.3
+    <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>    
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4
+  * Add AOT support.
+
+1.0.3
   * Add net6.0 support.
+
 1.0.2
   * Add netstandard2.0 support.
 
@@ -21,5 +23,4 @@
   * First public,include netstandard 1.5</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-
 </Project>

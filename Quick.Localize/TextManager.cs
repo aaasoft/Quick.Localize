@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,13 +11,14 @@ using System.Text.RegularExpressions;
 
 namespace Quick.Localize
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     public class TextManager
     {
-        public static String LanguageFileExtension { get; set; } = ".lang";
-        public static String LanguageFolder { get; set; } = "Language";
-        public static String LanguagePathInAssembly { get; set; } = "Language";
+        public static string LanguageFileExtension { get; set; } = ".lang";
+        public static string LanguageFolder { get; set; } = "Language";
+        public static string LanguagePathInAssembly { get; set; } = "Language";
 
-        private static Dictionary<String, TextManager> textManagerDict = new Dictionary<string, TextManager>();
+        private static Dictionary<string, TextManager> textManagerDict = new Dictionary<string, TextManager>();
 
         /// <summary>
         /// 获取默认的文本管理器实例
@@ -25,7 +27,7 @@ namespace Quick.Localize
         /// <summary>
         /// 默认语言
         /// </summary>
-        public static String DefaultLanguage { get; set; } = "zh-CN";
+        public static string DefaultLanguage { get; set; } = "zh-CN";
 
         /// <summary>
         /// 获取文本管理器实例
@@ -49,9 +51,9 @@ namespace Quick.Localize
         /// </summary>
         /// <param name="languageContent"></param>
         /// <returns></returns>
-        public static Dictionary<String, String> GetLanguageResourceDictionary(String languageContent)
+        public static Dictionary<string, string> GetLanguageResourceDictionary(string languageContent)
         {
-            Dictionary<String, String> languageDict = new Dictionary<String, string>();
+            Dictionary<string, string> languageDict = new Dictionary<String, string>();
 
             //(?'key'.+)\s*=(?'value'.+)
             Regex regex = new Regex(@"(?'key'.+)\s*=(?'value'.+)");
@@ -63,8 +65,8 @@ namespace Quick.Localize
 
                 if (!indexGroup.Success || !valueGroup.Success)
                     continue;
-                String key = indexGroup.Value;
-                String value = valueGroup.Value;
+                var key = indexGroup.Value;
+                var value = valueGroup.Value;
                 if (value.EndsWith("\r"))
                     value = value.Substring(0, value.Length - 1);
                 if (languageDict.ContainsKey(key))
@@ -80,13 +82,13 @@ namespace Quick.Localize
         /// <returns></returns>
         public static string[] GetLanguages()
         {
-            Collection<String> collection = new Collection<string>();
+            Collection<string> collection = new Collection<string>();
 
             //搜索语言目录
             DirectoryInfo languageFolderDi = new DirectoryInfo(LanguageFolder);
             if (languageFolderDi.Exists)
             {
-                foreach (String languageName in languageFolderDi.GetDirectories().Select(t => t.Name))
+                foreach (var languageName in languageFolderDi.GetDirectories().Select(t => t.Name))
                 {
                     if (!collection.Contains(languageName))
                         collection.Add(languageName);
@@ -99,13 +101,13 @@ namespace Quick.Localize
         }
 
         //类的语言资源字典
-        private Dictionary<String, Dictionary<String, String>> typeLanguageResourceDict = new Dictionary<String, Dictionary<String, string>>();
+        private Dictionary<string, Dictionary<string, string>> typeLanguageResourceDict = new Dictionary<string, Dictionary<String, string>>();
         /// <summary>
         /// 当前TextManager的语言
         /// </summary>
-        public String Language { get; private set; }
+        public string Language { get; private set; }
 
-        private TextManager(String language)
+        private TextManager(string language)
         {
             this.Language = language;
         }
@@ -115,13 +117,13 @@ namespace Quick.Localize
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public String GetText<T>(T key, params Object[] args)
+        public string GetText<T>(T key, params object[] args)
             where T : struct, Enum
         {
             var text = GetText<T>(key.ToString());
             if (args == null || args.Length == 0)
                 return text;
-            return String.Format(text, args);
+            return string.Format(text, args);
         }
 
         /// <summary>
@@ -129,24 +131,24 @@ namespace Quick.Localize
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public String GetTextWithTail<T>(T key, params Object[] args)
+        public string GetTextWithTail<T>(T key, params object[] args)
             where T : struct, Enum
         {
-            return $"{GetText(key, args)}(LanguageKey: {key.GetType().FullName}.{key.ToString()})";
+            return $"{GetText(key, args)}(LanguageKey: {key.GetType().FullName}.{key})";
         }
 
-        public String GetText<T>(String key)
+        public string GetText<T>(string key)
             where T:struct,Enum
         {
             var type = typeof(T);
-            Dictionary<String, String> languageResourceDict = getLanguageResourceDict<T>();
+            var languageResourceDict = getLanguageResourceDict<T>();
             if (languageResourceDict == null
                 || !languageResourceDict.ContainsKey(key))
                 return $"Language Resource[Type:{type.FullName}, Key:{key}] not found!";
             return languageResourceDict[key];
         }
 
-        public String GetText(String key, Assembly assembly, String resourcePath)
+        public string GetText(string key, Assembly assembly, string resourcePath)
         {
             var languageResourceDict = getLanguageResourceDict(assembly, resourcePath);
             if (languageResourceDict == null
@@ -159,9 +161,7 @@ namespace Quick.Localize
             where T : struct, Enum
         {
             var type = typeof(T);
-            var typeInfo = type.GetTypeInfo();
-
-            var key = string.Format("{0};{1}", typeInfo.Assembly.GetName().Name, type.FullName);
+            var key = string.Format("{0};{1}", type.Assembly.GetName().Name, type.FullName);
             lock (typeLanguageResourceDict)
             {
                 if (typeLanguageResourceDict.ContainsKey(key))
@@ -170,35 +170,34 @@ namespace Quick.Localize
                 var languageResourceDict = new Dictionary<string, string>();
                 typeLanguageResourceDict.Add(key, languageResourceDict);
 
-                if (typeInfo.IsEnum && typeInfo.GetCustomAttributes(typeof(TextResourceAttribute), false).Count() > 0)
+                if (type.GetCustomAttributes(typeof(TextResourceAttribute), false).Count() > 0)
                 {
-                    foreach (T item in Enum.GetValues<T>())
+                    foreach (var itemMemberInfo in type.GetMembers())
                     {
-                        MemberInfo itemMemberInfo = typeInfo.GetMember(item.ToString())[0];
-                        var textAttributes = itemMemberInfo.GetCustomAttributes(typeof(TextAttribute), false).Cast<TextAttribute>();
-                        TextAttribute textAttribute = textAttributes.Where(attr => attr.Language == Language).FirstOrDefault();
+                        var textAttributes = itemMemberInfo.GetCustomAttributes<TextAttribute>();
+                        var textAttribute = textAttributes.FirstOrDefault(attr => attr.Language == Language);
                         if (textAttribute == null)
                             textAttribute = textAttributes.Where(attr => attr.Language == TextAttribute.DEFAULT_LANGUAGE).FirstOrDefault();
                         if (textAttribute == null)
                             textAttribute = textAttributes.FirstOrDefault();
                         if (textAttribute == null)
                             continue;
-                        languageResourceDict.Add(item.ToString(), textAttribute.Value);
+                        languageResourceDict.Add(itemMemberInfo.Name, textAttribute.Value);
                     }
                 }
-                fillLanguageResourceDict(typeInfo.Assembly, type.FullName, languageResourceDict);
+                fillLanguageResourceDict(type.Assembly, type.FullName, languageResourceDict);
                 return languageResourceDict;
             }
         }
 
-        private Dictionary<String, String> getLanguageResourceDict(Assembly assembly, String resourcePath)
+        private Dictionary<string, string> getLanguageResourceDict(Assembly assembly, string resourcePath)
         {
-            String key = String.Format("{0};{1}", assembly.GetName().Name, resourcePath);
+            var key = string.Format("{0};{1}", assembly.GetName().Name, resourcePath);
             lock (typeLanguageResourceDict)
             {
                 if (typeLanguageResourceDict.ContainsKey(key))
                     return typeLanguageResourceDict[key];
-                Dictionary<String, String> languageResourceDict = new Dictionary<String, String>();
+                Dictionary<string, string> languageResourceDict = new Dictionary<string, string>();
                 typeLanguageResourceDict.Add(key, languageResourceDict);
                 fillLanguageResourceDict(assembly, resourcePath, languageResourceDict);
                 return languageResourceDict;
