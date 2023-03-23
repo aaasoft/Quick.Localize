@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.5;netstandard2.0;net45;</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Authors>scbeta</Authors>
     <Company />
     <Description>A simple libary for localize your program.</Description>
     <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/aaasoft/Quick.Localize/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>1.0.2
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>1.0.3
+  * Add net6.0 support.
+1.0.2
   * Add netstandard2.0 support.
 
 1.0.1
