@@ -115,9 +115,10 @@ namespace Quick.Localize
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public String GetText(Enum key, params Object[] args)
+        public String GetText<T>(T key, params Object[] args)
+            where T : struct, Enum
         {
-            var text = GetText(key.ToString(), key.GetType());
+            var text = GetText<T>(key.ToString());
             if (args == null || args.Length == 0)
                 return text;
             return String.Format(text, args);
@@ -128,14 +129,17 @@ namespace Quick.Localize
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public String GetTextWithTail(Enum key, params Object[] args)
+        public String GetTextWithTail<T>(T key, params Object[] args)
+            where T : struct, Enum
         {
             return $"{GetText(key, args)}(LanguageKey: {key.GetType().FullName}.{key.ToString()})";
         }
 
-        public String GetText(String key, Type type)
+        public String GetText<T>(String key)
+            where T:struct,Enum
         {
-            Dictionary<String, String> languageResourceDict = getLanguageResourceDict(type);
+            var type = typeof(T);
+            Dictionary<String, String> languageResourceDict = getLanguageResourceDict<T>();
             if (languageResourceDict == null
                 || !languageResourceDict.ContainsKey(key))
                 return $"Language Resource[Type:{type.FullName}, Key:{key}] not found!";
@@ -151,22 +155,24 @@ namespace Quick.Localize
             return languageResourceDict[key];
         }
 
-        private Dictionary<String, String> getLanguageResourceDict(Type type)
+        private Dictionary<string, string> getLanguageResourceDict<T>()
+            where T : struct, Enum
         {
+            var type = typeof(T);
             var typeInfo = type.GetTypeInfo();
 
-            String key = String.Format("{0};{1}", typeInfo.Assembly.GetName().Name, type.FullName);
+            var key = string.Format("{0};{1}", typeInfo.Assembly.GetName().Name, type.FullName);
             lock (typeLanguageResourceDict)
             {
                 if (typeLanguageResourceDict.ContainsKey(key))
                     return typeLanguageResourceDict[key];
 
-                Dictionary<String, String> languageResourceDict = new Dictionary<String, string>();
+                var languageResourceDict = new Dictionary<string, string>();
                 typeLanguageResourceDict.Add(key, languageResourceDict);
 
                 if (typeInfo.IsEnum && typeInfo.GetCustomAttributes(typeof(TextResourceAttribute), false).Count() > 0)
                 {
-                    foreach (Enum item in Enum.GetValues(type))
+                    foreach (T item in Enum.GetValues<T>())
                     {
                         MemberInfo itemMemberInfo = typeInfo.GetMember(item.ToString())[0];
                         var textAttributes = itemMemberInfo.GetCustomAttributes(typeof(TextAttribute), false).Cast<TextAttribute>();
