@@ -1,26 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
     <Authors>scbeta</Authors>
     <Company />
     <Description>A simple libary for localize your program.</Description>
     <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>    
-    <Version>1.0.4</Version>
-    <PackageReleaseNotes>1.0.4
-  * Add AOT support.
-
-1.0.3
-  * Add net6.0 support.
-
-1.0.2
-  * Add netstandard2.0 support.
-
-1.0.1
-  * Add net45 support.
-
-1.0
-  * First public,include netstandard 1.5</PackageReleaseNotes>
+    <Version>1.0.5</Version>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 </Project>

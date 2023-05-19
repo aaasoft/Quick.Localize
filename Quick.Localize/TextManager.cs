@@ -11,7 +11,9 @@ using System.Text.RegularExpressions;
 
 namespace Quick.Localize
 {
+#if !NETSTANDARD
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
+#endif
     public class TextManager
     {
         public static string LanguageFileExtension { get; set; } = ".lang";
