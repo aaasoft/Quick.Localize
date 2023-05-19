@@ -245,5 +245,73 @@ namespace Quick.Localize
                 }
             }
         }
+
+        /// <summary>
+        /// 获取语言文字
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public String GetText(Enum key, params Object[] args)
+        {
+            var text = GetText(key.ToString(), key.GetType());
+            if (args == null || args.Length == 0)
+                return text;
+            return String.Format(text, args);
+        }
+
+        /// <summary>
+        /// 获取语言文字(带尾巴，即语言枚举的完整类名与枚举名)
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public String GetTextWithTail(Enum key, params Object[] args)
+        {
+            return $"{GetText(key, args)}(LanguageKey: {key.GetType().FullName}.{key.ToString()})";
+        }
+
+        public String GetText(String key, Type type)
+        {
+            Dictionary<String, String> languageResourceDict = getLanguageResourceDict(type);
+            if (languageResourceDict == null
+                || !languageResourceDict.ContainsKey(key))
+                return $"Language Resource[Type:{type.FullName}, Key:{key}] not found!";
+            return languageResourceDict[key];
+        }
+
+
+        private Dictionary<String, String> getLanguageResourceDict(Type type)
+        {
+
+            var typeInfo = type.GetTypeInfo();
+
+            String key = String.Format("{0};{1}", typeInfo.Assembly.GetName().Name, type.FullName);
+            lock (typeLanguageResourceDict)
+            {
+                if (typeLanguageResourceDict.ContainsKey(key))
+                    return typeLanguageResourceDict[key];
+
+                Dictionary<String, String> languageResourceDict = new Dictionary<String, string>();
+                typeLanguageResourceDict.Add(key, languageResourceDict);
+
+                if (typeInfo.IsEnum && typeInfo.GetCustomAttributes(typeof(TextResourceAttribute), false).Count() > 0)
+                {
+                    foreach (Enum item in Enum.GetValues(type))
+                    {
+                        MemberInfo itemMemberInfo = typeInfo.GetMember(item.ToString())[0];
+                        var textAttributes = itemMemberInfo.GetCustomAttributes(typeof(TextAttribute), false).Cast<TextAttribute>();
+                        TextAttribute textAttribute = textAttributes.Where(attr => attr.Language == Language).FirstOrDefault();
+                        if (textAttribute == null)
+                            textAttribute = textAttributes.Where(attr => attr.Language == TextAttribute.DEFAULT_LANGUAGE).FirstOrDefault();
+                        if (textAttribute == null)
+                            textAttribute = textAttributes.FirstOrDefault();
+                        if (textAttribute == null)
+                            continue;
+                        languageResourceDict.Add(item.ToString(), textAttribute.Value);
+                    }
+                }
+                fillLanguageResourceDict(typeInfo.Assembly, type.FullName, languageResourceDict);
+                return languageResourceDict;
+            }
+        }
     }
 }
