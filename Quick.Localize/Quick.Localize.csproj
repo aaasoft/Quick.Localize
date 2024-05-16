@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <Authors>scbeta</Authors>
     <Company />
     <Description>A simple libary for localize your program.</Description>
     <PackageProjectUrl>https://github.com/aaasoft/Quick.Localize</PackageProjectUrl>    
-    <Version>1.0.5</Version>
+    <Version>2.0.0</Version>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GetText.NET" Version="1.9.14" />
+  </ItemGroup>
 </Project>

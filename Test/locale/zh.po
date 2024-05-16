@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Test\n"
+"POT-Creation-Date: 2024-05-16 09:17:35+0800\n"
+"PO-Revision-Date: 2024-05-16 09:18+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: ../../Program.cs:17 ../../Program.cs:22 ../../Program.cs:28
+#, csharp-format
+msgid "Hello C#!"
+msgstr "你好C#！"
+
+#: ../../Program.cs:16 ../../Program.cs:21 ../../Program.cs:27
+#, csharp-format
+msgid "Hello world!"
+msgstr "你好世界！"
+
+#: ../../Program.cs:18 ../../Program.cs:23 ../../Program.cs:29
+#, csharp-format
+msgid "Hello dotnet!"
+msgstr "你好dotnet！"

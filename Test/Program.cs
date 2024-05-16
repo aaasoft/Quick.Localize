@@ -1,49 +1,30 @@
 ﻿using Quick.Localize;
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace Test
 {
-    [TextResource]
-    public enum TextFromCode
-    {
-        [Text("Hello World!", Language = "en-US")]
-        [Text("你好世界!", Language = "zh-CN")]
-        HelloWorld
-    }
-
-    [TextResource]
-    public enum TextFromEmbedResource
-    {
-        HelloCSharp
-    }
-
-    [TextResource]
-    public enum TextFromExternalFile
-    {
-        HelloDotNet
-    }
-
     class Program
     {
         static void Main(string[] args)
         {
+            var textResourceManager = GettextResourceManager.GetResourceManager(typeof(Program).Assembly);
+
             Console.OutputEncoding = Encoding.UTF8;
-
-            Console.WriteLine("--English 英文--");
-            var textManager = TextManager.GetInstance("en-US");
-            Console.WriteLine(textManager.GetText(TextFromCode.HelloWorld));
-            Console.WriteLine(textManager.GetText(TextFromEmbedResource.HelloCSharp));
-            Console.WriteLine(textManager.GetText(TextFromExternalFile.HelloDotNet));
-
-            Console.WriteLine();
-            Console.WriteLine("--Chinese 中文--");
-            textManager = TextManager.GetInstance("zh-CN");
-            Console.WriteLine(textManager.GetText(TextFromCode.HelloWorld));
-            Console.WriteLine(textManager.GetText(TextFromEmbedResource.HelloCSharp));
-            Console.WriteLine(textManager.GetText(TextFromExternalFile.HelloDotNet));
-
-            Console.ReadLine();
+            var cultures = new[] { null, CultureInfo.GetCultureInfo("en-US"), CultureInfo.GetCultureInfo("zh-CN") };
+            foreach (var culture in cultures)
+            {
+                var cultureName = "Current 当前";
+                if (culture != null)
+                    cultureName = $"{culture.EnglishName} - {culture.DisplayName}";
+                Console.WriteLine($"--{cultureName}--");
+                var catalog = textResourceManager.GetCatalog(culture);
+                Console.WriteLine(catalog.GetString("Hello world!"));
+                Console.WriteLine(catalog.GetString("Hello C#!"));
+                Console.WriteLine(catalog.GetString("Hello dotnet!"));
+                Console.WriteLine();
+            }
         }
     }
 }
