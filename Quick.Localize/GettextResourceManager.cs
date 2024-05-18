@@ -13,6 +13,19 @@ namespace Quick.Localize
         public const string MO_FILE_EXTENSION = "mo";
         public const string LOCALE_PATH = "locale";
 
+        public static event EventHandler<CultureInfo> CurrentCultureChanged;
+        public static CultureInfo CurrentCulture { get; private set; } = CultureInfo.CurrentCulture;
+
+        public static void ChangeCurrentCulture(CultureInfo culture)
+        {
+            lock (resourceManagerDict)
+            {
+                resourceManagerDict.Clear();
+                CurrentCulture = culture;
+                CurrentCultureChanged.Invoke(typeof(GettextResourceManager), culture);
+            }
+        }
+
         private static Dictionary<Assembly, GettextResourceManager> resourceManagerDict = new Dictionary<Assembly, GettextResourceManager>();
         public static GettextResourceManager GetResourceManager(Assembly baseAssembly)
         {
@@ -24,11 +37,6 @@ namespace Quick.Localize
             }
         }
 
-        public static void Clear()
-        {
-            lock (resourceManagerDict)
-                resourceManagerDict.Clear();
-        }
         private Assembly baseAssembly;
         private string baseAssemblyName;
         private Dictionary<CultureInfo, Catalog> catalogDict = new Dictionary<CultureInfo, Catalog>();
@@ -54,10 +62,13 @@ namespace Quick.Localize
             return null;
         }
 
-        public ICatalog GetCatalog(CultureInfo culture = null)
+        public ICatalog GetCatalog()
         {
-            if (culture == null)
-                culture = CultureInfo.CurrentCulture;
+            return GetCatalog(CurrentCulture);
+        }
+
+        public ICatalog GetCatalog(CultureInfo culture)
+        {
             lock (catalogDict)
             {
                 if (!catalogDict.TryGetValue(culture, out var catalog))
