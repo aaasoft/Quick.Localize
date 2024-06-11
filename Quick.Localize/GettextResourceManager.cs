@@ -22,7 +22,7 @@ namespace Quick.Localize
             {
                 resourceManagerDict.Clear();
                 CurrentCulture = culture;
-                CurrentCultureChanged.Invoke(typeof(GettextResourceManager), culture);
+                CurrentCultureChanged?.Invoke(typeof(GettextResourceManager), culture);
             }
         }
 
