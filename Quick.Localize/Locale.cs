@@ -1,16 +1,15 @@
-using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using GetText;
 
 namespace Quick.Localize
 {
-    public class Locale
+    internal class InnerResource
     {
-        private static ConcurrentDictionary<Assembly, GettextResourceManager> gettextResourceManagerDict = new ConcurrentDictionary<Assembly, GettextResourceManager>();
-        private static ConcurrentDictionary<Assembly, ICatalog> catalogDict = new ConcurrentDictionary<Assembly, ICatalog>();
+        internal static ConcurrentDictionary<Assembly, GettextResourceManager> gettextResourceManagerDict = new ConcurrentDictionary<Assembly, GettextResourceManager>();
+        internal static ConcurrentDictionary<Assembly, ICatalog> catalogDict = new ConcurrentDictionary<Assembly, ICatalog>();
 
-        static Locale()
+        static InnerResource()
         {
             GettextResourceManager.CurrentCultureChanged += (sender, e) => ClearCache();
         }
@@ -20,12 +19,15 @@ namespace Quick.Localize
             catalogDict.Clear();
             gettextResourceManagerDict.Clear();
         }
+    }
 
+    public class Locale<T>
+    {
         private static ICatalog GetCatalog(Assembly assembly)
         {
-            return catalogDict.GetOrAdd(assembly, key =>
+            return InnerResource.catalogDict.GetOrAdd(assembly, key =>
             {
-                var gettextResourceManager = gettextResourceManagerDict
+                var gettextResourceManager = InnerResource.gettextResourceManagerDict
                     .GetOrAdd(key, key2 => GettextResourceManager.GetResourceManager(key2));
                 return gettextResourceManager.GetCatalog();
             });
@@ -37,12 +39,8 @@ namespace Quick.Localize
             get
             {
                 if (_ResourceAssembly == null)
-                    _ResourceAssembly = Assembly.GetEntryAssembly();
+                    _ResourceAssembly = typeof(T).Assembly;
                 return _ResourceAssembly;
-            }
-            set
-            {
-                _ResourceAssembly = value;
             }
         }
 
