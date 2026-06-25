@@ -10,6 +10,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>Quick.Localize is a i18n library.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>

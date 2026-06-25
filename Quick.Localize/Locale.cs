@@ -31,13 +31,28 @@ namespace Quick.Localize
             });
         }
 
-        public static string GetString(string text) => GetCatalog(Assembly.GetCallingAssembly()).GetString(text);
-        public static string GetString(string text, params object[] args) => GetCatalog(Assembly.GetCallingAssembly()).GetString(text, args);
-        public static string GetPluralString(string text, string pluralText, long n) => GetCatalog(Assembly.GetCallingAssembly()).GetPluralString(text, pluralText, n);
-        public static string GetPluralString(string text, string pluralText, long n, params object[] args) => GetCatalog(Assembly.GetCallingAssembly()).GetPluralString(text, pluralText, n, args);
-        public static string GetParticularString(string context, string text) => GetCatalog(Assembly.GetCallingAssembly()).GetParticularString(context, text);
-        public static string GetParticularString(string context, string text, params object[] args) => GetCatalog(Assembly.GetCallingAssembly()).GetParticularString(context, text, args);
-        public static string GetParticularPluralString(string context, string text, string pluralText, long n) => GetCatalog(Assembly.GetCallingAssembly()).GetParticularPluralString(context, text, pluralText, n);
-        public static string GetParticularPluralString(string context, string text, string pluralText, long n, params object[] args) => GetCatalog(Assembly.GetCallingAssembly()).GetParticularPluralString(context, text, pluralText, n, args);
+        private static Assembly _ResourceAssembly;
+        public static Assembly ResourceAssembly
+        {
+            get
+            {
+                if (_ResourceAssembly == null)
+                    _ResourceAssembly = Assembly.GetEntryAssembly();
+                return _ResourceAssembly;
+            }
+            set
+            {
+                _ResourceAssembly = value;
+            }
+        }
+
+        public static string GetString(string text) => GetCatalog(ResourceAssembly).GetString(text);
+        public static string GetString(string text, params object[] args) => GetCatalog(ResourceAssembly).GetString(text, args);
+        public static string GetPluralString(string text, string pluralText, long n) => GetCatalog(ResourceAssembly).GetPluralString(text, pluralText, n);
+        public static string GetPluralString(string text, string pluralText, long n, params object[] args) => GetCatalog(ResourceAssembly).GetPluralString(text, pluralText, n, args);
+        public static string GetParticularString(string context, string text) => GetCatalog(ResourceAssembly).GetParticularString(context, text);
+        public static string GetParticularString(string context, string text, params object[] args) => GetCatalog(ResourceAssembly).GetParticularString(context, text, args);
+        public static string GetParticularPluralString(string context, string text, string pluralText, long n) => GetCatalog(ResourceAssembly).GetParticularPluralString(context, text, pluralText, n);
+        public static string GetParticularPluralString(string context, string text, string pluralText, long n, params object[] args) => GetCatalog(ResourceAssembly).GetParticularPluralString(context, text, pluralText, n, args);
     }
 }
